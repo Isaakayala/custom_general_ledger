@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_custom_general_ledger_tree" model="ir.ui.view">
+        <field name="name">custom.general.ledger.tree</field>
+        <field name="model">custom.general.ledger</field>
+        <field name="arch" type="xml">
+            <list create="false" delete="false" string="Libro Mayor" multi_edit="false">
+                <!-- Botón para abrir el asiento -->
+                <button name="action_open_move" 
+                        type="object" 
+                        icon="fa-external-link"
+                        string="Ver Asiento"
+                        class="btn-link"
+                        title="Haga clic para ver el asiento contable completo"/>
+                <field name="date" width="110"/>
+                <field name="move_name" string="Número Asiento"/>
+                <field name="account_id" width="200"/>
+                <field name="journal_id" width="150"/>
+                <field name="partner_id" optional="hide"/>
+                <field name="ref" optional="show"/>
+                <field name="debit" sum="Total Débito" widget="monetary"/>
+                <field name="credit" sum="Total Crédito" widget="monetary"/>
+                <field name="balance" widget="monetary"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_custom_general_ledger_search" model="ir.ui.view">
+        <field name="name">custom.general.ledger.search</field>
+        <field name="model">custom.general.ledger</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="account_id" string="Cuenta"/>
+                <field name="partner_id" string="Contacto"/>
+                <field name="move_name" string="Número Asiento"/>
+                <field name="journal_id" string="Diario"/>
+                <field name="ref" string="Referencia"/>
+                <separator/>
+                <filter name="date_range" 
+                        string="Rango de Fechas"
+                        help="Filtrar por fecha del asiento"
+                        date="date"/>
+                <separator/>
+                <filter name="group_account" 
+                        string="Agrupar por Cuenta" 
+                        context="{'group_by':'account_id'}"/>
+                <filter name="group_journal" 
+                        string="Agrupar por Diario" 
+                        context="{'group_by':'journal_id'}"/>
+                <filter name="group_partner" 
+                        string="Agrupar por Contacto" 
+                        context="{'group_by':'partner_id'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="action_custom_general_ledger" model="ir.actions.act_window">
+        <field name="name">Libro Mayor</field>
+        <field name="res_model">custom.general.ledger</field>
+        <field name="view_mode">list</field>
+        <field name="domain">[]</field>
+        <field name="context">{'group_by':'account_id'}</field>
+        <field name="search_view_id" ref="view_custom_general_ledger_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Libro Mayor Personalizado
+            </p>
+            <p>
+                Este reporte muestra todas las líneas de asientos contables
+                con su saldo acumulado por cuenta.
+            </p>
+            <p>
+                Haga clic en el botón
+                <strong>"Ver Asiento"</strong> para acceder 
+                al asiento contable completo.
+            </p>
+        </field>
+    </record>
+    <menuitem id="menu_custom_general_ledger_root"
+          name="Libros Mayor"
+          parent="account.menu_finance_entries"
+          sequence="-1"/>
+    <menuitem id="menu_custom_general_ledger"
+          name="Libro Mayor"
+          parent="menu_custom_general_ledger_root"
+          action="action_custom_general_ledger"
+          sequence="10"/>
+</odoo>

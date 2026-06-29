@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- INCOME STATEMENT VIEWS -->
+    <record id="view_financial_income_statement_form" model="ir.ui.view">
+        <field name="name">financial.income.statement.form</field>
+        <field name="model">financial.income.statement</field>
+        <field name="arch" type="xml">
+            <form string="Estado de Resultados" create="false" delete="false" edit="false">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        <strong>Estado de Resultados</strong> - Reporte de ingresos y gastos
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="date_start" />
+                            <field name="date_end" />
+                            <field name="company_id" />
+                        </group>
+                        <group>
+                            <field name="currency_id" />
+                        </group>
+                    </group>
+                    <separator string="Ingresos" />
+                    <group>
+                        <field name="revenue" widget="monetary" />
+                    </group>
+                    <separator string="Costo de Ventas" />
+                    <group>
+                        <field name="cost_of_sales" widget="monetary" />
+                    </group>
+                    <separator string="Ganancia Bruta" />
+                    <group>
+                        <field name="gross_profit" widget="monetary" />
+                    </group>
+                    <separator string="Gastos Operativos" />
+                    <group>
+                        <field name="operating_expenses" widget="monetary" />
+                    </group>
+                    <separator string="Ingreso Operativo" />
+                    <group>
+                        <field name="operating_income" widget="monetary" />
+                    </group>
+                    <separator string="Otros Ingresos y Gastos" />
+                    <group>
+                        <group>
+                            <field name="other_income" widget="monetary" />
+                        </group>
+                        <group>
+                            <field name="other_expenses" widget="monetary" />
+                        </group>
+                    </group>
+                    <separator string="Ingreso Neto" />
+                    <group>
+                        <field name="net_income" widget="monetary" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_financial_income_statement_tree" model="ir.ui.view">
+        <field name="name">financial.income.statement.tree</field>
+        <field name="model">financial.income.statement</field>
+        <field name="arch" type="xml">
+            <list string="Estado de Resultados" create="false" delete="false" edit="false">
+                <field name="name" />
+                <field name="date_start" />
+                <field name="date_end" />
+                <field name="revenue" widget="monetary" />
+                <field name="cost_of_sales" widget="monetary" />
+                <field name="gross_profit" widget="monetary" />
+                <field name="operating_income" widget="monetary" />
+                <field name="net_income" widget="monetary" />
+            </list>
+        </field>
+    </record>
+
+    <record id="action_financial_income_statement" model="ir.actions.act_window">
+        <field name="name">Estado de Resultados</field>
+        <field name="res_model">financial.income.statement</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_financial_income_statement_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Estado de Resultados
+            </p>
+            <p>
+                Este reporte muestra:
+            </p>
+            <ul>
+                <li>Ingresos totales</li>
+                <li>Costos de ventas</li>
+                <li>Ganancia bruta</li>
+                <li>Gastos operativos</li>
+                <li>Ingreso operativo</li>
+                <li>Ingreso neto del período</li>
+            </ul>
+        </field>
+    </record>
+
+    <!-- BALANCE SHEET VIEWS -->
+    <record id="view_financial_balance_sheet_form" model="ir.ui.view">
+        <field name="name">financial.balance.sheet.form</field>
+        <field name="model">financial.balance.sheet</field>
+        <field name="arch" type="xml">
+            <form string="Balance General" create="false" delete="false" edit="false">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        <strong>Balance General</strong> - Posición financiera a una fecha específica
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="date" />
+                            <field name="company_id" />
+                        </group>
+                        <group>
+                            <field name="currency_id" />
+                        </group>
+                    </group>
+                    <separator string="ACTIVOS" />
+                    <group>
+                        <group string="Activos Corrientes">
+                            <field name="current_assets" widget="monetary" />
+                        </group>
+                        <group string="Activos No Corrientes">
+                            <field name="non_current_assets" widget="monetary" />
+                        </group>
+                    </group>
+                    <separator string="TOTAL ACTIVOS" />
+                    <group>
+                        <field name="total_assets" widget="monetary" />
+                    </group>
+                    <separator string="PASIVOS" />
+                    <group>
+                        <group string="Pasivos Corrientes">
+                            <field name="current_liabilities" widget="monetary" />
+                        </group>
+                        <group string="Pasivos No Corrientes">
+                            <field name="non_current_liabilities" widget="monetary" />
+                        </group>
+                    </group>
+                    <separator string="TOTAL PASIVOS" />
+                    <group>
+                        <field name="total_liabilities" widget="monetary" />
+                    </group>
+                    <separator string="PATRIMONIO" />
+                    <group>
+                        <field name="total_equity" widget="monetary" />
+                    </group>
+                    <separator string="VERIFICACIÓN: TOTAL PASIVOS + PATRIMONIO" />
+                    <group>
+                        <field name="total_liabilities_equity" widget="monetary" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_financial_balance_sheet_tree" model="ir.ui.view">
+        <field name="name">financial.balance.sheet.tree</field>
+        <field name="model">financial.balance.sheet</field>
+        <field name="arch" type="xml">
+            <list string="Balance General" create="false" delete="false" edit="false">
+                <field name="name" />
+                <field name="date" />
+                <field name="total_assets" widget="monetary" />
+                <field name="total_liabilities" widget="monetary" />
+                <field name="total_equity" widget="monetary" />
+                <field name="total_liabilities_equity" widget="monetary" />
+            </list>
+        </field>
+    </record>
+
+    <record id="action_financial_balance_sheet" model="ir.actions.act_window">
+        <field name="name">Balance General</field>
+        <field name="res_model">financial.balance.sheet</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_financial_balance_sheet_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Balance General
+            </p>
+            <p>
+                Este reporte muestra:
+            </p>
+            <ul>
+                <li>Activos corrientes y no corrientes</li>
+                <li>Total de activos</li>
+                <li>Pasivos corrientes y no corrientes</li>
+                <li>Total de pasivos</li>
+                <li>Total de patrimonio</li>
+                <li>Verificación de la ecuación: Activos = Pasivos + Patrimonio</li>
+            </ul>
+        </field>
+    </record>
+
+    <!-- CASH FLOW VIEWS -->
+    <record id="view_financial_cash_flow_form" model="ir.ui.view">
+        <field name="name">financial.cash.flow.form</field>
+        <field name="model">financial.cash.flow</field>
+        <field name="arch" type="xml">
+            <form string="Flujo de Caja" create="false" delete="false" edit="false">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        <strong>Estado de Flujo de Caja</strong> - Movimiento de efectivo por actividades
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="date_start" />
+                            <field name="date_end" />
+                            <field name="company_id" />
+                        </group>
+                        <group>
+                            <field name="currency_id" />
+                        </group>
+                    </group>
+                    <separator string="ACTIVIDADES DE OPERACIÓN" />
+                    <group>
+                        <field name="net_income" widget="monetary" string="Ingreso Neto" />
+                        <field name="adjustments" widget="monetary" string="Ajustes" />
+                    </group>
+                    <group>
+                        <field name="cash_from_operations" widget="monetary" string="Efectivo de Operaciones" />
+                    </group>
+                    <separator string="ACTIVIDADES DE INVERSIÓN" />
+                    <group>
+                        <field name="capital_expenditure" widget="monetary" string="Gastos de Capital" />
+                    </group>
+                    <group>
+                        <field name="cash_from_investing" widget="monetary" string="Efectivo de Inversiones" />
+                    </group>
+                    <separator string="ACTIVIDADES DE FINANCIAMIENTO" />
+                    <group>
+                        <group>
+                            <field name="debt_payments" widget="monetary" string="Pagos de Deuda" />
+                        </group>
+                        <group>
+                            <field name="equity_changes" widget="monetary" string="Cambios en Patrimonio" />
+                        </group>
+                    </group>
+                    <group>
+                        <field name="cash_from_financing" widget="monetary" string="Efectivo de Financiamiento" />
+                    </group>
+                    <separator string="RESUMEN" />
+                    <group>
+                        <group>
+                            <field name="beginning_cash" widget="monetary" string="Efectivo Inicial" />
+                            <field name="net_change_cash" widget="monetary" string="Cambio Neto" />
+                        </group>
+                        <group>
+                            <field name="ending_cash" widget="monetary" string="Efectivo Final" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_financial_cash_flow_tree" model="ir.ui.view">
+        <field name="name">financial.cash.flow.tree</field>
+        <field name="model">financial.cash.flow</field>
+        <field name="arch" type="xml">
+            <list string="Flujo de Caja" create="false" delete="false" edit="false">
+                <field name="name" />
+                <field name="date_start" />
+                <field name="date_end" />
+                <field name="cash_from_operations" widget="monetary" />
+                <field name="cash_from_investing" widget="monetary" />
+                <field name="cash_from_financing" widget="monetary" />
+                <field name="net_change_cash" widget="monetary" />
+                <field name="ending_cash" widget="monetary" />
+            </list>
+        </field>
+    </record>
+
+    <record id="action_financial_cash_flow" model="ir.actions.act_window">
+        <field name="name">Flujo de Caja</field>
+        <field name="res_model">financial.cash.flow</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_financial_cash_flow_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Estado de Flujo de Caja
+            </p>
+            <p>
+                Este reporte muestra:
+            </p>
+            <ul>
+                <li>Efectivo generado por operaciones</li>
+                <li>Efectivo utilizado en inversiones</li>
+                <li>Efectivo utilizado en financiamiento</li>
+                <li>Cambio neto en efectivo</li>
+                <li>Posición de efectivo inicial y final</li>
+            </ul>
+        </field>
+    </record>
+
+    <!-- MENU ITEMS -->
+    <menuitem id="menu_financial_reports" name="Reportes Financieros" parent="account.menu_accounting" sequence="50" />
+    <menuitem id="menu_financial_income_statement" name="Estado de Resultados" parent="menu_financial_reports" action="action_financial_income_statement" />
+    <menuitem id="menu_financial_balance_sheet" name="Balance General" parent="menu_financial_reports" action="action_financial_balance_sheet" />
+    <menuitem id="menu_financial_cash_flow" name="Flujo de Caja" parent="menu_financial_reports" action="action_financial_cash_flow" />
+</odoo>

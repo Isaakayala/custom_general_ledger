@@ -47,100 +47,82 @@ class IncomeStatement(models.Model):
                     c.currency_id,
                     
                     -- Ingresos
-                    COALESCE((
-                        SELECT SUM(aml.credit - aml.debit)
+                    COALESCE((SELECT SUM(aml.credit - aml.debit)
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         JOIN account_move am ON am.id = aml.move_id
                         WHERE aa.internal_type = 'income'
                         AND am.state = 'posted'
-                        AND aml.company_id = c.id
-                    ), 0) as revenue,
+                        AND aml.company_id = c.id), 0) as revenue,
                     
                     -- Costo de Ventas
-                    COALESCE((
-                        SELECT SUM(aml.debit - aml.credit)
+                    COALESCE((SELECT SUM(aml.debit - aml.credit)
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         JOIN account_move am ON am.id = aml.move_id
                         WHERE aa.internal_type = 'expense'
                         AND aa.code LIKE '5%'
                         AND am.state = 'posted'
-                        AND aml.company_id = c.id
-                    ), 0) as cost_of_sales,
+                        AND aml.company_id = c.id), 0) as cost_of_sales,
                     
                     -- Ganancia Bruta
-                    COALESCE((
-                        SELECT SUM(aml.credit - aml.debit)
+                    COALESCE((SELECT SUM(aml.credit - aml.debit)
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         JOIN account_move am ON am.id = aml.move_id
                         WHERE aa.internal_type = 'income'
                         AND am.state = 'posted'
-                        AND aml.company_id = c.id
-                    ), 0) - COALESCE((
-                        SELECT SUM(aml.debit - aml.credit)
+                        AND aml.company_id = c.id), 0) - COALESCE((SELECT SUM(aml.debit - aml.credit)
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         JOIN account_move am ON am.id = aml.move_id
                         WHERE aa.internal_type = 'expense'
                         AND aa.code LIKE '5%'
                         AND am.state = 'posted'
-                        AND aml.company_id = c.id
-                    ), 0) as gross_profit,
+                        AND aml.company_id = c.id), 0) as gross_profit,
                     
                     -- Gastos Operativos
-                    COALESCE((
-                        SELECT SUM(aml.debit - aml.credit)
+                    COALESCE((SELECT SUM(aml.debit - aml.credit)
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         JOIN account_move am ON am.id = aml.move_id
                         WHERE aa.internal_type = 'expense'
                         AND NOT aa.code LIKE '5%'
                         AND am.state = 'posted'
-                        AND aml.company_id = c.id
-                    ), 0) as operating_expenses,
+                        AND aml.company_id = c.id), 0) as operating_expenses,
                     
                     -- Ingreso Operativo
-                    COALESCE((
-                        SELECT SUM(aml.credit - aml.debit)
+                    COALESCE((SELECT SUM(aml.credit - aml.debit)
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         JOIN account_move am ON am.id = aml.move_id
                         WHERE aa.internal_type = 'income'
                         AND am.state = 'posted'
-                        AND aml.company_id = c.id
-                    ), 0) - COALESCE((
-                        SELECT SUM(aml.debit - aml.credit)
+                        AND aml.company_id = c.id), 0) - COALESCE((SELECT SUM(aml.debit - aml.credit)
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         JOIN account_move am ON am.id = aml.move_id
                         WHERE aa.internal_type = 'expense'
                         AND am.state = 'posted'
-                        AND aml.company_id = c.id
-                    ), 0) as operating_income,
+                        AND aml.company_id = c.id), 0) as operating_income,
                     
                     0 as other_income,
                     0 as other_expenses,
                     
                     -- Ingreso Neto
-                    COALESCE((
-                        SELECT SUM(aml.credit - aml.debit)
+                    COALESCE((SELECT SUM(aml.credit - aml.debit)
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         JOIN account_move am ON am.id = aml.move_id
                         WHERE aa.internal_type = 'income'
                         AND am.state = 'posted'
-                        AND aml.company_id = c.id
-                    ), 0) - COALESCE((
-                        SELECT SUM(aml.debit - aml.credit)
+                        AND aml.company_id = c.id), 0) - COALESCE((SELECT SUM(aml.debit - aml.credit)
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         JOIN account_move am ON am.id = aml.move_id
                         WHERE aa.internal_type = 'expense'
                         AND am.state = 'posted'
-                        AND aml.company_id = c.id
-                    ), 0) as net_income
+                        AND aml.company_id = c.id), 0) as net_income
                     
                 FROM res_company c
             )
@@ -198,80 +180,64 @@ class BalanceSheet(models.Model):
                     c.currency_id,
                     
                     -- Activos Corrientes
-                    COALESCE((
-                        SELECT SUM(aml.debit - aml.credit)
+                    COALESCE((SELECT SUM(aml.debit - aml.credit)
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         WHERE aa.internal_type = 'asset'
                         AND aa.code LIKE '1%'
-                        AND aml.parent_state = 'posted'
-                    ), 0) as current_assets,
+                        AND aml.parent_state = 'posted'), 0) as current_assets,
                     
                     -- Activos No Corrientes
-                    COALESCE((
-                        SELECT SUM(aml.debit - aml.credit)
+                    COALESCE((SELECT SUM(aml.debit - aml.credit)
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         WHERE aa.internal_type = 'asset'
                         AND aa.code LIKE '16%'
-                        AND aml.parent_state = 'posted'
-                    ), 0) as non_current_assets,
+                        AND aml.parent_state = 'posted'), 0) as non_current_assets,
                     
                     -- Total Activos
-                    COALESCE((
-                        SELECT SUM(aml.debit - aml.credit)
+                    COALESCE((SELECT SUM(aml.debit - aml.credit)
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         WHERE aa.internal_type = 'asset'
-                        AND aml.parent_state = 'posted'
-                    ), 0) as total_assets,
+                        AND aml.parent_state = 'posted'), 0) as total_assets,
                     
                     -- Pasivos Corrientes
-                    COALESCE((
-                        SELECT SUM(aml.credit - aml.debit)
+                    COALESCE((SELECT SUM(aml.credit - aml.debit)
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         WHERE aa.internal_type = 'liability'
                         AND aa.code LIKE '2%'
-                        AND aml.parent_state = 'posted'
-                    ), 0) as current_liabilities,
+                        AND aml.parent_state = 'posted'), 0) as current_liabilities,
                     
                     -- Pasivos No Corrientes
-                    COALESCE((
-                        SELECT SUM(aml.credit - aml.debit)
+                    COALESCE((SELECT SUM(aml.credit - aml.debit)
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         WHERE aa.internal_type = 'liability'
                         AND aa.code LIKE '27%'
-                        AND aml.parent_state = 'posted'
-                    ), 0) as non_current_liabilities,
+                        AND aml.parent_state = 'posted'), 0) as non_current_liabilities,
                     
                     -- Total Pasivos
-                    COALESCE((
-                        SELECT SUM(aml.credit - aml.debit)
+                    COALESCE((SELECT SUM(aml.credit - aml.debit)
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         WHERE aa.internal_type = 'liability'
-                        AND aml.parent_state = 'posted'
-                    ), 0) as total_liabilities,
+                        AND aml.parent_state = 'posted'), 0) as total_liabilities,
                     
                     -- Total Patrimonio
-                    COALESCE((
-                        SELECT SUM(aml.credit - aml.debit)
+                    COALESCE((SELECT SUM(aml.credit - aml.debit)
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         WHERE aa.internal_type = 'equity'
-                        AND aml.parent_state = 'posted'
-                    ), 0) as total_equity,
+                        AND aml.parent_state = 'posted'), 0) as total_equity,
                     
                     -- Total Pasivos + Patrimonio
-                    COALESCE((
-                        SELECT SUM(aml.credit - aml.debit)
+                    COALESCE((SELECT SUM(aml.credit - aml.debit)
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         WHERE aa.internal_type IN ('liability', 'equity')
-                        AND aml.parent_state = 'posted'
-                    ), 0) as total_liabilities_equity
+                        AND aml.parent_state = 'posted'), 0) as total_liabilities_equity
                     
                 FROM res_company c
             )
@@ -334,52 +300,40 @@ class CashFlow(models.Model):
                     c.currency_id,
                     
                     -- Ingreso Neto
-                    COALESCE((
-                        SELECT SUM(aml.credit - aml.debit)
+                    COALESCE((SELECT SUM(aml.credit - aml.debit)
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         WHERE aa.internal_type = 'income'
-                        AND aml.parent_state = 'posted'
-                    ), 0) - COALESCE((
-                        SELECT SUM(aml.debit - aml.credit)
+                        AND aml.parent_state = 'posted'), 0) - COALESCE((SELECT SUM(aml.debit - aml.credit)
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         WHERE aa.internal_type = 'expense'
-                        AND aml.parent_state = 'posted'
-                    ), 0) as net_income,
+                        AND aml.parent_state = 'posted'), 0) as net_income,
                     
                     -- Ajustes (Depreciación, etc)
-                    COALESCE((
-                        SELECT SUM(aml.debit - aml.credit)
+                    COALESCE((SELECT SUM(aml.debit - aml.credit)
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         WHERE aa.code LIKE '681%' OR aa.code LIKE '682%'
-                        AND aml.parent_state = 'posted'
-                    ), 0) as adjustments,
+                        AND aml.parent_state = 'posted'), 0) as adjustments,
                     
                     -- Efectivo de Operaciones
-                    COALESCE((
-                        SELECT SUM(aml.credit - aml.debit)
+                    COALESCE((SELECT SUM(aml.credit - aml.debit)
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         WHERE aa.internal_type = 'income'
-                        AND aml.parent_state = 'posted'
-                    ), 0) - COALESCE((
-                        SELECT SUM(aml.debit - aml.credit)
+                        AND aml.parent_state = 'posted'), 0) - COALESCE((SELECT SUM(aml.debit - aml.credit)
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         WHERE aa.internal_type = 'expense'
-                        AND aml.parent_state = 'posted'
-                    ), 0) as cash_from_operations,
+                        AND aml.parent_state = 'posted'), 0) as cash_from_operations,
                     
                     -- Gastos de Capital
-                    COALESCE((
-                        SELECT SUM(aml.debit - aml.credit)
+                    COALESCE((SELECT SUM(aml.debit - aml.credit)
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         WHERE aa.code LIKE '16%'
-                        AND aml.parent_state = 'posted'
-                    ), 0) as capital_expenditure,
+                        AND aml.parent_state = 'posted'), 0) as capital_expenditure,
                     
                     0 as cash_from_investing,
                     0 as debt_payments,
@@ -387,33 +341,27 @@ class CashFlow(models.Model):
                     0 as cash_from_financing,
                     
                     -- Cambio Neto en Efectivo
-                    COALESCE((
-                        SELECT SUM(aml.debit - aml.credit)
+                    COALESCE((SELECT SUM(aml.debit - aml.credit)
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         WHERE aa.code LIKE '1011%' OR aa.code LIKE '1012%'
-                        AND aml.parent_state = 'posted'
-                    ), 0) as net_change_cash,
+                        AND aml.parent_state = 'posted'), 0) as net_change_cash,
                     
                     -- Efectivo Inicial
-                    COALESCE((
-                        SELECT aml.debit - aml.credit
+                    COALESCE((SELECT aml.debit - aml.credit
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         WHERE (aa.code LIKE '1011%' OR aa.code LIKE '1012%')
                         AND aml.parent_state = 'posted'
                         ORDER BY aml.date ASC
-                        LIMIT 1
-                    ), 0) as beginning_cash,
+                        LIMIT 1), 0) as beginning_cash,
                     
                     -- Efectivo Final
-                    COALESCE((
-                        SELECT SUM(aml.debit - aml.credit)
+                    COALESCE((SELECT SUM(aml.debit - aml.credit)
                         FROM account_move_line aml
                         JOIN account_account aa ON aa.id = aml.account_id
                         WHERE aa.code LIKE '1011%' OR aa.code LIKE '1012%'
-                        AND aml.parent_state = 'posted'
-                    ), 0) as ending_cash
+                        AND aml.parent_state = 'posted'), 0) as ending_cash
                     
                 FROM res_company c
             )

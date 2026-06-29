@@ -1,2 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_custom_general_ledger,custom.general.ledger,model_custom_general_ledger,account.group_account_user,1,0,0,0
+access_financial_income_statement,financial.income.statement,model_financial_income_statement,account.group_account_user,1,0,0,0
+access_financial_balance_sheet,financial.balance.sheet,model_financial_balance_sheet,account.group_account_user,1,0,0,0
+access_financial_cash_flow,financial.cash.flow,model_financial_cash_flow,account.group_account_user,1,0,0,0
